@@ -1,16 +1,45 @@
-# React + Vite
+# Tenzies
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A fun dice game built with React where the goal is to roll until all dice show the same value. Click on individual dice to "freeze" them between rolls.
 
-Currently, two official plugins are available:
+## How to Play
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+1. Click **Roll** to roll all unfrozen dice
+2. Click on a die to freeze/unfreeze it at its current value
+3. Keep rolling until all 10 dice show the same number
+4. Celebrate with confetti when you win! 🎉
 
-## React Compiler
+## Technologies Used
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **React 19** - UI library with hooks (useState, useRef, useEffect)
+- **Vite 7** - Fast build tool and dev server
+- **nanoid** - Generating unique IDs for each die
+- **react-confetti** - Celebration animation on game win
+- **ESLint** - Code linting
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+# Install dependencies
+npm install
+
+# Run development server
+npm run dev
+
+# Build for production
+npm run build
+```
+
+## Features
+
+- 10 interactive dice
+- Hold/release dice between rolls
+- Win detection when all dice match
+- Confetti celebration on win
+- Accessible with screen reader support
+
+---
+
+## About Scrimba
+
+This project was built as part of learning React through [Scrimba](https://scrimba.com/?via=u42c5f8e) - an interactive learning platform for developers. Scrimba offers hands-on coding courses where you can pause videos and edit the code directly in the browser.

@@ -7,7 +7,7 @@ body {
     margin: 0;
     background-color: #0B2434;
     padding: 20px;
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -15,20 +15,29 @@ body {
 }
 
 div#root {
-    height: 100%;
+    height: auto;
     width: 100%;
-    max-height: 400px;
-    max-width: 400px;
+    max-width: 900px;
+}
+
+.game-layout {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    align-items: stretch;
 }
 
 main {
     background-color: #F5F5F5;
-    height: 100%;
+    min-height: 400px;
+    width: 100%;
+    max-width: 400px;
     border-radius: 5px;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
     align-items: center;
+    padding: 20px;
 }
 
 .title {
@@ -40,7 +49,15 @@ main {
     font-family: 'Inter', sans-serif;
     font-weight: 400;
     margin-top: 0;
+    margin-bottom: 8px;
     text-align: center;
+}
+
+.timer {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #2B283A;
 }
 
 .dice-container {
@@ -76,6 +93,54 @@ button.roll-dice {
     background-color: #5035FF;
     color: white;
     font-size: 1.2rem;
+}
+
+.attempts-panel {
+    background-color: #F5F5F5;
+    border-radius: 5px;
+    width: 100%;
+    max-width: 280px;
+    padding: 16px;
+}
+
+.attempts-panel h2 {
+    margin: 0 0 12px;
+    font-size: 1.2rem;
+}
+
+.attempts-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.attempt-item {
+    display: flex;
+    justify-content: space-between;
+    background: #ffffff;
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-weight: 700;
+}
+
+.empty-attempts {
+    margin: 0;
+    color: #666;
+}
+
+@media (max-width: 820px) {
+    .game-layout {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    main,
+    .attempts-panel {
+        max-width: 400px;
+    }
 }
 
 .sr-only {

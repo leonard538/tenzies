@@ -14,6 +14,7 @@ export default function App() {
     const [dice, setDice] = useState(() => generateAllNewDice())
     const [elapsedSeconds, setElapsedSeconds] = useState(0)
     const [attemptHistory, setAttemptHistory] = useState([])
+    const [isGameActive, setIsGameActive] = useState(false)
     const buttonRef = useRef(null)
     const winRecordedRef = useRef(false)
 
@@ -21,13 +22,13 @@ export default function App() {
         dice.every(die => die.value === dice[0].value)
         
     useEffect(() => {
-        if (gameWon) {
+        if (gameWon && isGameActive) {
             buttonRef.current.focus()
         }
-    }, [gameWon])
+    }, [gameWon, isGameActive])
 
     useEffect(() => {
-        if (gameWon) {
+        if (!isGameActive || gameWon) {
             return
         }
 
@@ -36,7 +37,7 @@ export default function App() {
         }, 1000)
 
         return () => clearInterval(timer)
-    }, [gameWon])
+    }, [gameWon, isGameActive])
 
     useEffect(() => {
         if (gameWon && !winRecordedRef.current) {
@@ -66,6 +67,10 @@ export default function App() {
     }
     
     function rollDice() {
+        if (!isGameActive) {
+            return
+        }
+
         if (!gameWon) {
             setDice(oldDice => oldDice.map(die =>
                 die.isHeld ?
@@ -75,10 +80,15 @@ export default function App() {
         } else {
             setDice(generateAllNewDice())
             setElapsedSeconds(0)
+            setIsGameActive(false)
         }
     }
 
     function hold(id) {
+        if (!isGameActive || gameWon) {
+            return
+        }
+
         setDice(oldDice => oldDice.map(die =>
             die.id === id ?
                 { ...die, isHeld: !die.isHeld } :
@@ -86,12 +96,23 @@ export default function App() {
         ))
     }
 
+    function startGame() {
+        setDice(generateAllNewDice())
+        setElapsedSeconds(0)
+        setIsGameActive(true)
+        winRecordedRef.current = false
+    }
+
+    function clearHistory() {
+        setAttemptHistory([])
+    }
+
     const diceElements = dice.map(dieObj => (
         <Die
             key={dieObj.id}
             value={dieObj.value}
             isHeld={dieObj.isHeld}
-            hold={() => hold(dieObj.id)}
+            hold={isGameActive ? () => hold(dieObj.id) : () => {}}
         />
     ))
 
@@ -105,29 +126,38 @@ export default function App() {
 
     return (
         <div className="game-layout">
+            {gameWon && <Confetti />}
             <aside className="side-panel how-to-play">
                 <h2>How to Play</h2>
                 <ol>
+                    <li>Press "Start Game" to begin the timer and enable controls</li>
                     <li>Click "Roll" to roll all unfrozen dice</li>
                     <li>Click on a die to freeze/unfreeze it at its current value</li>
                     <li>Keep rolling until all 10 dice show the same number</li>
                     <li>Celebrate with confetti when you win! 🎉</li>
                 </ol>
             </aside>
-            <main>
-                {gameWon && <Confetti />}
-                <div aria-live="polite" className="sr-only">
-                    {gameWon && <p>Congratulations! You won! Press "New Game" to start again.</p>}
-                </div>
-                <h1 className="title">Tenzies</h1>
-                <p className="timer">Time: {formatElapsedTime(elapsedSeconds)}</p>
-                <div className="dice-container">
-                    {diceElements}
-                </div>
-                <button ref={buttonRef} className="roll-dice" onClick={rollDice}>
-                    {gameWon ? "New Game" : "Roll"}
-                </button>
-            </main>
+            <div className="main-wrapper">
+                <main className={!isGameActive ? "main-disabled" : ""}>
+                    <div aria-live="polite" className="sr-only">
+                        {gameWon && <p>Congratulations! You won! Press "New Game" to start again.</p>}
+                    </div>
+                    <h1 className="title">Tenzies</h1>
+                    <p className="timer">Time: {formatElapsedTime(elapsedSeconds)}</p>
+                    <div className="dice-container">
+                        {diceElements}
+                    </div>
+                    <button ref={buttonRef} className="roll-dice" onClick={rollDice} disabled={!isGameActive}>
+                        {gameWon ? "New Game" : "Roll"}
+                    </button>
+                </main>
+
+                {!isGameActive && (
+                    <div className="start-overlay">
+                        <button className="start-button" onClick={startGame}>Start Game</button>
+                    </div>
+                )}
+            </div>
 
             <aside className="side-panel attempts-panel" aria-live="polite">
                 <h2>Attempt History</h2>
@@ -138,6 +168,13 @@ export default function App() {
                         {attemptElements}
                     </ul>
                 )}
+                <button
+                    className="clear-history"
+                    onClick={clearHistory}
+                    disabled={attemptHistory.length === 0}
+                >
+                    Clear History
+                </button>
             </aside>
         </div>
     )

@@ -105,13 +105,21 @@ export default function App() {
 
     return (
         <div className="game-layout">
+            <aside className="side-panel how-to-play">
+                <h2>How to Play</h2>
+                <ol>
+                    <li>Click "Roll" to roll all unfrozen dice</li>
+                    <li>Click on a die to freeze/unfreeze it at its current value</li>
+                    <li>Keep rolling until all 10 dice show the same number</li>
+                    <li>Celebrate with confetti when you win! 🎉</li>
+                </ol>
+            </aside>
             <main>
                 {gameWon && <Confetti />}
                 <div aria-live="polite" className="sr-only">
                     {gameWon && <p>Congratulations! You won! Press "New Game" to start again.</p>}
                 </div>
                 <h1 className="title">Tenzies</h1>
-                <p className="instructions">Roll until all dice are the same. Click each die to freeze it at its current value between rolls.</p>
                 <p className="timer">Time: {formatElapsedTime(elapsedSeconds)}</p>
                 <div className="dice-container">
                     {diceElements}
@@ -121,7 +129,7 @@ export default function App() {
                 </button>
             </main>
 
-            <aside className="attempts-panel" aria-live="polite">
+            <aside className="side-panel attempts-panel" aria-live="polite">
                 <h2>Attempt History</h2>
                 {attemptHistory.length === 0 ? (
                     <p className="empty-attempts">No completed attempts yet.</p>
